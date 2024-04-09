@@ -1,10 +1,26 @@
+name: Deploy
+
 on: push
+
 jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
     steps:
+      - uses: actions/checkout@v3
       - run: node --version
       - run: npm --version
-      - uses: actions/checkout@v3
-      - run: npm install
+      env:
+        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOSTNAME: ${{secrets.SSH_HOST}}
+        USER_NAME: ${{secrets.USER_NAME}}
+
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          ls
+          cd /home/ubuntu/random-chat-backend
+          git pull origin main
+          docker rm -v -f $(docker ps -qa)
+          sudo docker run -p 80:3000 random-chat-backend:v1 '
+
