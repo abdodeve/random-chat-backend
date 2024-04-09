@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: node --version
-      - run: echo "PRIVATE_KEY: $PRIVATE_KEY | HOSTNAME: $HOSTNAME | USER_NAME: $USER_NAME"
+      - run: echo "$PRIVATE_KEY | $HOSTNAME | $USER_NAME"
       - run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
