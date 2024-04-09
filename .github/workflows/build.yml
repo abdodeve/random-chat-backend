@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     container: node:16
     env:
-        PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        HOSTNAME: ${{secrets.SSH_HOST}}
-        USER_NAME: ${{secrets.USER_NAME}}
+        PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }}
+        HOSTNAME: ${{ vars.SSH_HOST }}
+        USER_NAME: ${{ vars.USER_NAME }}
     steps:
       - uses: actions/checkout@v3
       - run: node --version
-      - run: npm --version
+      - run: echo "PRIVATE_KEY: $PRIVATE_KEY | HOSTNAME: $HOSTNAME | USER_NAME: $USER_NAME"
       - run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
