@@ -6,19 +6,19 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
-    env:
-        PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }}
-        HOSTNAME: ${{ vars.SSH_HOST }}
-        USER_NAME: ${{ vars.USER_NAME }}
     steps:
       - uses: actions/checkout@v3
       - run: node --version
-      - run: echo "$PRIVATE_KEY | $HOSTNAME | $USER_NAME"
+      - run: echo "$SSH_PRIVATE_KEY | $SSH_HOST | $USER_NAME"
       - run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          echo "$SSH_PRIVATE_KEY" > SSH_PRIVATE_KEY && chmod 600 SSH_PRIVATE_KEY
+          ssh -o StrictHostKeyChecking=no -i SSH_PRIVATE_KEY ${USER_NAME}@${SSH_HOST} '
             ls
             cd /home/ubuntu/random-chat-backend
             git pull origin main
             docker rm -v -f $(docker ps -qa)
             sudo docker run -p 80:3000 random-chat-backend:v1 '
+    env:
+        SSH_PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }}
+        SSH_HOST: ${{ vars.SSH_HOST }}
+        USER_NAME: ${{ vars.USER_NAME }}
