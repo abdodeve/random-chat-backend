@@ -10,12 +10,12 @@ jobs:
       - uses: actions/checkout@v3
       - run: node --version
       - run: npm --version
-      env:
+    env:
         PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         HOSTNAME: ${{secrets.SSH_HOST}}
         USER_NAME: ${{secrets.USER_NAME}}
 
-      run: |
+    run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           ls
@@ -23,4 +23,3 @@ jobs:
           git pull origin main
           docker rm -v -f $(docker ps -qa)
           sudo docker run -p 80:3000 random-chat-backend:v1 '
-
