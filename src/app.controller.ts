@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello World version:3';
   }
 
   @Post('send')
