@@ -6,6 +6,7 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
+    environment: Production
     steps:
       - uses: actions/checkout@v3
       - run: node --version
