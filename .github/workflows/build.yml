@@ -17,10 +17,10 @@ jobs:
             ls
             cd /home/ubuntu/random-chat-backend
             git pull origin main
-            sudo docker rm -v -f $(docker ps -qa)
-            sudo docker rmi -f $(docker images -aq)
+            sudo docker stop random-chat-backend-container && sudo docker rm random-chat-backend-container
+            sudo docker rmi $(docker images | grep 'random-chat-backend')
             sudo docker build -t random-chat-backend:v1 .
-            sudo docker run -d -p 80:3000 random-chat-backend:v1 '
+            sudo docker run -d -p 80:3000 --name random-chat-backend-container random-chat-backend:v1 '
     env:
         SSH_PRIVATE_KEY: ${{ vars.SSH_PRIVATE_KEY }}
         SSH_HOST: ${{ vars.SSH_HOST }}
